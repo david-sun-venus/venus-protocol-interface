@@ -6,7 +6,7 @@ import { CellGroup, type CellProps } from 'components';
 import { PLACEHOLDER_KEY } from 'constants/placeholders';
 import { useGetToken } from 'libs/tokens';
 import { useTranslation } from 'libs/translations';
-import type { Vault } from 'types';
+import type { AnyVault } from 'types';
 import {
   areTokensEqual,
   convertPriceMantissaToDollars,
@@ -16,7 +16,7 @@ import {
 import { Banner } from './Banner';
 
 export interface OverviewProps {
-  vaults: Vault[];
+  vaults: AnyVault[];
   className?: string;
 }
 

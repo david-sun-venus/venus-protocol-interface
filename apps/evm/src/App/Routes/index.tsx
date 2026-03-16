@@ -30,6 +30,8 @@ const Bridge = safeLazyLoad(() => import('pages/Bridge'));
 const Skills = safeLazyLoad(() => import('pages/Skills'));
 const PrivacyPolicy = safeLazyLoad(() => import('pages/PrivacyPolicy'));
 const TermsOfUse = safeLazyLoad(() => import('pages/TermsOfUse'));
+// TEMP: preview page for PendleModal - remove after ui-qa-verify
+const PendleModalPreview = safeLazyLoad(() => import('pages/PendleModalPreview'));
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -232,6 +234,16 @@ const AppRoutes = () => {
           element={
             <PageSuspense>
               <TermsOfUse />
+            </PageSuspense>
+          }
+        />
+
+        {/* TEMP: PendleModal preview route - remove after ui-qa-verify */}
+        <Route
+          path="/__pendle-preview"
+          element={
+            <PageSuspense>
+              <PendleModalPreview />
             </PageSuspense>
           }
         />
