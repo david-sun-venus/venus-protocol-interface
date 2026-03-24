@@ -370,6 +370,9 @@
       },
       "claimOn": "{{appName}}で請求",
       "externalRewards": "外部報酬",
+      "pendleVaultGroup": {
+        "name": "TRANSLATION NEEDED"
+      },
       "primeGroup": {
         "disabledContractWarningMessage": "Primeコントラクトは現在停止中です。Primeからの利息は引き続き発生していますが、コントラクトが再開されるまで請求できません。",
         "name": "Prime"

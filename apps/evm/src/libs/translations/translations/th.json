@@ -370,6 +370,9 @@
       },
       "claimOn": "รับบน {{appName}}",
       "externalRewards": "รางวัลภายนอก",
+      "pendleVaultGroup": {
+        "name": "TRANSLATION NEEDED"
+      },
       "primeGroup": {
         "disabledContractWarningMessage": "สัญญา Prime ถูกหยุดชั่วคราวอยู่ในขณะนี้ ดอกเบี้ยจาก Prime ยังคงสะสม แต่ไม่สามารถรับได้จนกว่าสัญญาจะถูกเปิดใช้งานอีกครั้ง",
         "name": "Prime"

@@ -1,11 +1,14 @@
-import type BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import { poolLensAbi, primeAbi, vaiVaultAbi, venusLensAbi, xvsVaultAbi } from 'libs/contracts';
 import { VError, logError } from 'libs/errors';
+import type { PendleVault } from 'types';
+import { convertMantissaToTokens } from 'utilities';
 import convertPriceMantissaToDollars from 'utilities/convertPriceMantissaToDollars';
 import extractSettledPromiseValue from 'utilities/extractSettledPromiseValue';
 import findTokenByAddress from 'utilities/findTokenByAddress';
 import removeDuplicates from 'utilities/removeDuplicates';
 import type { ContractFunctionArgs, ReadContractReturnType } from 'viem';
+import { type GetPendleSwapQuoteOutput, getPendleSwapQuote } from '../getPendleSwapQuote';
 import formatOutput from './formatOutput';
 import { getApiTokenPrice } from './getApiTokenPrice';
 import { getMerklUserRewards } from './getMerklUserRewards';
@@ -27,8 +30,10 @@ export const getPendingRewards = async ({
   vaiVaultContractAddress,
   xvsVaultContractAddress,
   primeContractAddress,
+  pendleVaults,
   chainId,
   merklCampaigns,
+  slippagePercentage,
 }: GetPendingRewardsInput): Promise<GetPendingRewardsOutput> => {
   const xvsTokenAddress = tokens.find(token => token.symbol === 'XVS')?.address;
 
@@ -274,6 +279,24 @@ export const getPendingRewards = async ({
     };
   }, {});
 
+  let swapQuotes: GetPendleSwapQuoteOutput[] = [];
+  if (Array.isArray(pendleVaults)) {
+    const swapQuotePromises = pendleVaults.map(vault =>
+      getPendleSwapQuote({
+        chainId,
+        fromToken: vault.stakedToken,
+        toToken: vault.rewardToken,
+        amount: convertMantissaToTokens({
+          value: vault.userStakedMantissa ?? new BigNumber(0),
+          token: vault.rewardToken,
+        }),
+        slippagePercentage,
+        receiverAddress: accountAddress,
+      }),
+    );
+    swapQuotes = await Promise.all(swapQuotePromises);
+  }
+
   const pendingRewardGroups = formatOutput({
     tokens,
     legacyPoolComptrollerContractAddress,
@@ -294,6 +317,16 @@ export const getPendingRewards = async ({
     isXvsVestingVaultContractPaused: xvsVestingVaultPausedResult,
     isPrimeContractPaused: extractSettledPromiseValue(isPrimeContractPausedResult) ?? false,
     merklPendingRewards,
+    pendleVaultsWithSwapQuote: pendleVaults
+      ?.map((vault, index) =>
+        swapQuotes[index]
+          ? {
+              ...vault,
+              swapQuote: swapQuotes[index],
+            }
+          : undefined,
+      )
+      .filter(vault => vault) as (PendleVault & { swapQuote: GetPendleSwapQuoteOutput })[],
   });
 
   return {

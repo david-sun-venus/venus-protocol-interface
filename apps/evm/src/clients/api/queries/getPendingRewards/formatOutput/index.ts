@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import type { Token } from 'types';
+import type { PendleVault, Token } from 'types';
 
 import type { poolLensAbi, primeAbi, venusLensAbi, xvsVaultAbi } from 'libs/contracts';
 import type {
@@ -9,13 +9,16 @@ import type {
   ReadContractReturnType,
   SimulateContractReturnType,
 } from 'viem';
+import type { GetPendleSwapQuoteOutput } from '../../getPendleSwapQuote';
 import type {
   PendingExternalRewardSummary,
   PendingInternalRewardSummary,
   PendingRewardGroup,
+  PendleVaultRewardGroup,
   PrimePendingRewardGroup,
   XvsVestingVaultPendingRewardGroup,
 } from '../types';
+import { formatPendleVaultToReward } from './formatPendleVaultToRewards';
 import formatToExternalPendingRewardGroup from './formatToExternalPendingRewardGroup';
 import formatToIsolatedPoolPendingRewardGroup from './formatToIsolatedPoolPendingRewardGroup';
 import formatToLegacyPoolPendingRewardGroup from './formatToLegacyPoolPendingRewardGroup';
@@ -39,6 +42,7 @@ const formatOutput = ({
   isVaiVaultContractPaused,
   isXvsVestingVaultContractPaused,
   merklPendingRewards,
+  pendleVaultsWithSwapQuote,
 }: {
   tokens: Token[];
   xvsVestingVaultPoolInfos: (
@@ -77,6 +81,7 @@ const formatOutput = ({
     ContractFunctionArgs<typeof primeAbi, 'nonpayable' | 'payable', 'getPendingRewards'>
   >['result'];
   merklPendingRewards: PendingExternalRewardSummary[];
+  pendleVaultsWithSwapQuote?: (PendleVault & { swapQuote: GetPendleSwapQuoteOutput })[];
 }): PendingRewardGroup[] => {
   const pendingRewardGroups: PendingRewardGroup[] = [];
 
@@ -219,6 +224,17 @@ const formatOutput = ({
   });
 
   pendingRewardGroups.push(...merklPendingRewardGroups);
+
+  if (Array.isArray(pendleVaultsWithSwapQuote)) {
+    pendingRewardGroups.push(
+      ...(pendleVaultsWithSwapQuote
+        .map(vaultWithSwapQuote => {
+          const { swapQuote, ...vault } = vaultWithSwapQuote;
+          return formatPendleVaultToReward({ vault, swapQuote });
+        })
+        .filter(item => item) as PendleVaultRewardGroup[]),
+    );
+  }
 
   return pendingRewardGroups;
 };

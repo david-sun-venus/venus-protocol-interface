@@ -370,6 +370,9 @@
       },
       "claimOn": "在 {{appName}} 上領取",
       "externalRewards": "外部獎勵",
+      "pendleVaultGroup": {
+        "name": "TRANSLATION NEEDED"
+      },
       "primeGroup": {
         "disabledContractWarningMessage": "Prime 合約目前已暫停。Prime 的利息仍在累積，但需等合約恢復後才能領取。",
         "name": "Prime"

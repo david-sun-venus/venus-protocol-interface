@@ -44,6 +44,8 @@ export const ClaimRewardsContent = ({
   const hasInternalRewards = internalRewardsGroups.length > 0;
   const hasExternalRewards = externalRewardsGroups.length > 0;
 
+  console.log(internalRewardsGroups, externalRewardsGroups);
+
   return (
     <div className="flex flex-col md:gap-4 md:rounded-3xl" onClick={e => e.stopPropagation()}>
       {hasInternalRewards && (

@@ -370,6 +370,9 @@
       },
       "claimOn": "{{appName}} üzerinde talep et",
       "externalRewards": "Harici ödüller",
+      "pendleVaultGroup": {
+        "name": "TRANSLATION NEEDED"
+      },
       "primeGroup": {
         "disabledContractWarningMessage": "Prime sözleşmesi şu anda duraklatılmıştır. Prime'dan faizler birikmeye devam eder ancak sözleşme tekrar açılana kadar talep edilemez.",
         "name": "Prime"

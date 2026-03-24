@@ -1,7 +1,8 @@
 import type BigNumber from 'bignumber.js';
 
-import type { ChainId, MerklDistribution, Token } from 'types';
+import type { ChainId, MerklDistribution, PendleVault, Token, VToken } from 'types';
 import type { Address, PublicClient } from 'viem';
+import type { GetPendleSwapQuoteOutput } from '../getPendleSwapQuote';
 
 export interface GetPendingRewardsInput {
   chainId: ChainId;
@@ -17,6 +18,8 @@ export interface GetPendingRewardsInput {
   venusLensContractAddress?: Address;
   primeContractAddress?: Address;
   legacyPoolComptrollerContractAddress?: Address;
+  pendleVaults?: PendleVault[];
+  slippagePercentage: number;
 }
 
 interface PendingRewardEntry {
@@ -120,10 +123,23 @@ export interface PrimePendingRewardGroup {
   pendingRewards: PrimePendingReward[];
 }
 
+export interface PendleVaultRewardGroup {
+  type: 'pendle-vault';
+  isDisabled: boolean;
+  stakedToken: Token;
+  rewardToken: Token;
+  rewardAmountMantissa: BigNumber;
+  rewardAmountCents: BigNumber | undefined;
+  vToken: VToken;
+  swapQuote: GetPendleSwapQuoteOutput;
+  id: string;
+}
+
 export type PendingRewardGroup =
   | LegacyPoolPendingRewardGroup
   | IsolatedPoolPendingRewardGroup
   | VaultPendingRewardGroup
   | XvsVestingVaultPendingRewardGroup
   | PrimePendingRewardGroup
-  | ExternalPendingRewardGroup;
+  | ExternalPendingRewardGroup
+  | PendleVaultRewardGroup;

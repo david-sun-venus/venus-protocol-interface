@@ -1,4 +1,5 @@
-import type { Token } from 'types';
+import type { GetPendleSwapQuoteOutput } from 'clients/api/queries/getPendleSwapQuote';
+import type { Token, VToken } from 'types';
 import type { Address } from 'viem';
 
 export interface VaiVaultClaim {
@@ -28,12 +29,20 @@ export interface PrimeClaim {
   vTokenAddressesWithPendingReward: Address[];
 }
 
+export interface PendleVaultClaim {
+  contract: 'PendlePtVault';
+  swapQuote: GetPendleSwapQuoteOutput;
+  fromToken: Token;
+  vToken: VToken;
+}
+
 export type Claim =
   | VaiVaultClaim
   | XvsVestingVaultClaim
   | LegacyPoolComptrollerClaim
   | RewardsDistributorClaim
-  | PrimeClaim;
+  | PrimeClaim
+  | PendleVaultClaim;
 
 export type ClaimRewardsInput = {
   claims: Claim[];

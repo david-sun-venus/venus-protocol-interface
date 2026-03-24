@@ -370,6 +370,9 @@
       },
       "claimOn": "Nhận trên {{appName}}",
       "externalRewards": "Phần thưởng bên ngoài",
+      "pendleVaultGroup": {
+        "name": "TRANSLATION NEEDED"
+      },
       "primeGroup": {
         "disabledContractWarningMessage": "Hợp đồng Prime hiện đang tạm dừng. Lãi từ Prime vẫn tích lũy nhưng không thể nhận cho đến khi hợp đồng được mở lại.",
         "name": "Prime"

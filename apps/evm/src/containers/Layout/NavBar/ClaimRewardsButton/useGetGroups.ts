@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import { type Claim, useGetPendingRewards, useGetPools } from 'clients/api';
 import { NULL_ADDRESS } from 'constants/address';
+import { useGetUserSlippageTolerance } from 'hooks/useGetUserSlippageTolerance';
 import { useGetToken } from 'libs/tokens';
 import { useTranslation } from 'libs/translations';
 import { useAccountAddress } from 'libs/wallet';
@@ -10,6 +11,8 @@ import type { ExternalRewardsGroup, Group, InternalRewardsGroup } from './types'
 const useGetGroups = ({ uncheckedGroupIds }: { uncheckedGroupIds: string[] }) => {
   const { t } = useTranslation();
   const { accountAddress } = useAccountAddress();
+
+  const { userSlippageTolerancePercentage } = useGetUserSlippageTolerance();
 
   const { data: getPoolsData } = useGetPools({
     accountAddress,
@@ -22,6 +25,7 @@ const useGetGroups = ({ uncheckedGroupIds }: { uncheckedGroupIds: string[] }) =>
   const { data: getPendingRewardsData } = useGetPendingRewards(
     {
       accountAddress: accountAddress || NULL_ADDRESS,
+      slippagePercentage: userSlippageTolerancePercentage / 100,
     },
     {
       enabled: !!accountAddress,
@@ -106,6 +110,30 @@ const useGetGroups = ({ uncheckedGroupIds }: { uncheckedGroupIds: string[] }) =>
             ],
           };
 
+          return [...acc, group];
+        }
+
+        if (pendingRewardGroup.type === 'pendle-vault') {
+          const group: Group = {
+            id: pendingRewardGroup.id,
+            name: `${t('claimReward.modal.pendleVaultGroup.name')}`,
+            isChecked: !uncheckedGroupIds.includes(pendingRewardGroup.id),
+            pendingRewards: [
+              {
+                rewardToken: pendingRewardGroup.rewardToken,
+                rewardAmountMantissa: pendingRewardGroup.rewardAmountMantissa,
+                rewardAmountCents: pendingRewardGroup.rewardAmountCents,
+              },
+            ],
+            claims: [
+              {
+                contract: 'PendlePtVault',
+                swapQuote: pendingRewardGroup.swapQuote,
+                vToken: pendingRewardGroup.vToken,
+                fromToken: pendingRewardGroup.rewardToken,
+              },
+            ],
+          };
           return [...acc, group];
         }
 

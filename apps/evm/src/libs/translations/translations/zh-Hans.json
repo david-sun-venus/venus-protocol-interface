@@ -370,6 +370,9 @@
       },
       "claimOn": "在 {{appName}} 上领取",
       "externalRewards": "外部奖励",
+      "pendleVaultGroup": {
+        "name": "TRANSLATION NEEDED"
+      },
       "primeGroup": {
         "disabledContractWarningMessage": "Prime 合约目前已暂停。Prime 的利息仍在累积，但需等合约恢复后才能领取。",
         "name": "Prime"

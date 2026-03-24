@@ -13,6 +13,7 @@ import type { Address } from 'viem';
 import { getPendingRewards } from '.';
 import { useGetXvsVaultPoolCount } from '../getXvsVaultPoolCount/useGetXvsVaultPoolCount';
 import { useGetPools } from '../useGetPools';
+import { useGetPendleVaults } from '../useGetVaults/useGetPendleVaults';
 import type { GetPendingRewardsInput, GetPendingRewardsOutput } from './types';
 
 type TrimmedGetPendingRewardsInput = Omit<
@@ -73,6 +74,8 @@ export const useGetPendingRewards = (
   const { address: primeContractAddress } = useGetContractAddress({
     name: 'Prime',
   });
+
+  const { data: pendleVaults, isLoading: isPendleVaultsLoading } = useGetPendleVaults();
 
   const isPrimeEnabled = useIsFeatureEnabled({
     name: 'prime',
@@ -171,6 +174,7 @@ export const useGetPendingRewards = (
             primeContractAddress: isPrimeEnabled ? primeContractAddress : undefined,
             chainId,
             merklCampaigns,
+            pendleVaults,
             ...input,
             ...params,
           }),
@@ -180,6 +184,7 @@ export const useGetPendingRewards = (
     enabled:
       (options?.enabled === undefined || options.enabled) &&
       !isGetPoolsLoading &&
-      !isGetXvsVaultPoolCountLoading,
+      !isGetXvsVaultPoolCountLoading &&
+      !isPendleVaultsLoading,
   });
 };

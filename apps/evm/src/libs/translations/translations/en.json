@@ -370,6 +370,9 @@
       },
       "claimOn": "Claim on {{appName}}",
       "externalRewards": "External rewards",
+      "pendleVaultGroup": {
+        "name": "Pendle Vault"
+      },
       "primeGroup": {
         "disabledContractWarningMessage": "The Prime contract is currently paused. Interests from Prime are still accruing but can't be claimed until the contract is unpaused.",
         "name": "Prime"
