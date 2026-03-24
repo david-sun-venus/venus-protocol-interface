@@ -65,6 +65,12 @@ export const PositionTab: React.FC<PositionTabProps> = ({ vault, initialMode = '
   const [actionMode, setActionMode] = useState<ActionMode>(
     forceActionMode ? forceActionMode : initialMode,
   );
+  useEffect(() => {
+    if (forceActionMode) {
+      setActionMode(forceActionMode);
+    }
+  }, [forceActionMode]);
+
   const isStake = actionMode === 'deposit';
 
   const handleActionModeChange = (index: number) => {

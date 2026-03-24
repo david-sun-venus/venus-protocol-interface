@@ -106,12 +106,7 @@ export const usePendlePtVault = (
       captureAnalyticEvent(`Pendle vault ${input.type}`, {
         pendleMarketAddress: pendleMarketAddress,
         fromTokenSymbol: input.fromToken.symbol,
-        fromTokenAmountTokens: (
-          convertMantissaToTokens({
-            token: input.fromToken,
-            value: input.amountToken,
-          }) ?? '0'
-        ).toNumber(),
+        fromTokenAmountTokens: input.amountToken.toNumber(),
         toTokenSymbol: input.toToken.symbol,
         toTokenAmountTokens: (
           convertMantissaToTokens({
